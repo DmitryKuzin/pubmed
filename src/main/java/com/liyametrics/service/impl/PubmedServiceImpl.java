@@ -43,7 +43,7 @@ public class PubmedServiceImpl implements PubmedService {
                 res.addAll(OAConverter.convertToDO(response));
             }
         } catch (Throwable t) {
-            System.out.println("Cannot load subscriptions");
+            System.out.println(t.toString());
         }
 
         if(res.size()>0) {

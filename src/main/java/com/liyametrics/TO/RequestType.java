@@ -6,19 +6,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "providerType", propOrder = {
-        "from"
-})
+@XmlType(name = "requestType")
 public class RequestType {
 
-    @XmlAttribute(name = "id")
-    protected String from;
+    @XmlAttribute(name = "from")
+    protected String fromDate;
 
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
+    public String getFromDate() {
+        return fromDate;
     }
 }

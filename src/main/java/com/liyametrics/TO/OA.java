@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "actionResultType", propOrder = {
+@XmlType(name = "OA", propOrder = {
         "responseDate",
         "request",
         "records"

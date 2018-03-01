@@ -1,7 +1,5 @@
 package com.liyametrics.controller;
 
-import com.liyametrics.domain.Customer;
-import com.liyametrics.repository.CustomerRepository;
 import com.liyametrics.service.PubmedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,16 +22,16 @@ public class HelloController {
     @RequestMapping("/")
     public String index() {
 
-        return "Liya super sexy!";
+        return "Hello!";
     }
 
-    @RequestMapping("/fetchData")
-    public String fetchData() {
-
-        String fetchedMessage = "Fetched " + pubmedService.fetchRecords().toString() + " records from PubMed";
-
-        return fetchedMessage;
-    }
+//    @RequestMapping("/fetchData")
+//    public String fetchData() {
+//
+//        String fetchedMessage = "Fetched " + pubmedService.fetchRecords().toString() + " records from PubMed";
+//
+//        return fetchedMessage;
+//    }
 
 //    @RequestMapping("/getAll")
 //    public Iterable<Customer> getAll() {

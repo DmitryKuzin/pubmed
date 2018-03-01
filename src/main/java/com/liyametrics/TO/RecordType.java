@@ -3,7 +3,7 @@ package com.liyametrics.TO;
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "providerType", propOrder = {
+@XmlType(name = "recordType", propOrder = {
         "link"
 })
 public class RecordType {
