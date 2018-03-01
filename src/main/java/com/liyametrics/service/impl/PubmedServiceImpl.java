@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class PubmedServiceImpl implements PubmedService {
 
-    private final String pubmedUrl = "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?from=2013-01-01+08:00:00";
+    private final String pubmedUrl = "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?from=2013-01-01";
     private final RestTemplate restTemplate;
     private final RecordRepository recordRepository;
 

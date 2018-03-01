@@ -1,12 +1,9 @@
 package com.liyametrics.TO;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
+@XmlRootElement(name="request")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "requestType")
 public class RequestType {
 
     @XmlAttribute(name = "from")
@@ -14,5 +11,9 @@ public class RequestType {
 
     public String getFromDate() {
         return fromDate;
+    }
+
+    public void setFromDate(String fromDate) {
+        this.fromDate = fromDate;
     }
 }
