@@ -19,7 +19,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(value = { "classpath:application.properties" })
+@PropertySource(value = {"classpath:application.properties-heroku"})
 public class HibernateConfig {
 
     @Autowired

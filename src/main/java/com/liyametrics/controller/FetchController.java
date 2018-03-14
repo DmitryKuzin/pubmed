@@ -31,10 +31,19 @@ public class FetchController {
     @GetMapping("/fetchData")
     public String fetchData(String from, String to) throws JAXBException {
 
-        List<Date> range = DateTimeUtil.getRange(from, to);
+        List<String> range = DateTimeUtil.getRange(from, to);
 
         pubmedService.fetchRecords(range);
 
         return "Data fetched";
+    }
+
+    @ApiOperation(value = "Подгрузить вчерашние статьи")
+    @GetMapping("/fetchFreshData")
+    public List<String> fetchFreshData() {
+
+        System.out.println("updateRecords started crawling");
+        return pubmedService.fetchRecords(Period.YESTERDAY);
+
     }
 }

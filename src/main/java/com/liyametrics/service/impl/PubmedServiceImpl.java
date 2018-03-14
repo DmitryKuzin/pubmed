@@ -40,17 +40,26 @@ public class PubmedServiceImpl implements PubmedService {
 
 
     @Override
-    public void fetchRecords(List<Date> range) {
-
+    public void fetchRecords(List<String> range) {
+        range.forEach(r -> {
+            String queryString = PUBMED_URL + r;
+            processFetchingData(queryString, DateTimeUtil.fromString(r));
+        });
     }
 
     @Override
-    public void fetchRecords(Period period) {
+    public List<String> fetchRecords(Period period) {
 
         String queryString = PUBMED_URL + DateTimeUtil.getDate(period);
+        return processFetchingData(queryString, DateTimeUtil.getDateDate(period));
+    }
+
+    private List<String> processFetchingData(String url, Date forDay) {
+        List<String> pmids = new ArrayList<>();
+
         try {
             ResponseEntity<OA> responseEntity =
-                    restTemplate.getForEntity(queryString, OA.class);
+                    restTemplate.getForEntity(url, OA.class);
 
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 Stream<RecordType> stream = responseEntity.getBody().getRecords().getRecord().stream();
@@ -65,9 +74,10 @@ public class PubmedServiceImpl implements PubmedService {
                                 doi,
                                 r.getCitation(),
                                 altmetricService.getRate(doi),
-                                DateTimeUtil.getDateDate(period)
+                                forDay
                         ));
-                    }else {
+                        pmids.add(r.getId());
+                    } else {
                         System.out.println("Id :" + r.getId() + " already exists in DB.");
                     }
 
@@ -77,6 +87,8 @@ public class PubmedServiceImpl implements PubmedService {
         } catch (Throwable t) {
             System.out.println(t.toString());
         }
+
+        return pmids;
     }
 
     @Override

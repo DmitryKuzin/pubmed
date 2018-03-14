@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface PubmedService {
 
-    void fetchRecords(List<Date> range);
+    void fetchRecords(List<String> range);
 
-    void fetchRecords(Period period);
+    List<String> fetchRecords(Period period);
 
     String convertToDoi(String pmid);
 }
