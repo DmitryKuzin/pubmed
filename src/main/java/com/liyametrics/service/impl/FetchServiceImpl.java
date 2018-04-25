@@ -14,6 +14,7 @@ import com.liyametrics.utils.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,59 +56,65 @@ public class FetchServiceImpl implements FetchService {
 
     private void processfetching(List<Article> articles){
 
-        InfoMessageDecorator.print("Получили статьи с Pubmed API");
+        InfoMessageDecorator.print("Получили " + articles.size() + " статей с Pubmed API");
+
 
         articles.forEach(article -> {
 
             String text = pdfArticleTextExtractorService.extractText(article.getPMID(),article.getUrl());
 
-            InfoMessageDecorator.print("Вытащили текст из pdf документа статьи");
+            List<CategoriesResult> categoriesResults = new ArrayList<>();
+            if( text!= null) {
+                InfoMessageDecorator.print("Вытащили текст из pdf документа статьи");
 
-            List<CategoriesResult> categoriesResults = ibmWatsonService.miningTextByWatson(text);
+                categoriesResults = ibmWatsonService.miningTextByWatson(text);
 
-            InfoMessageDecorator.print("Получили категории для статьи из IBM Watson API");
+                InfoMessageDecorator.print("Получили категории для статьи из IBM Watson API");
 
-            Category categories = new Category();
+                Category categories = new Category();
 
-            categories.setPMID(article.getPMID());
+                categories.setPMID(article.getPMID());
 
-            String[] array = new String[categoriesResults.size()];
+                String[] array = new String[categoriesResults.size()];
 
-            categoriesResults.stream().map(CategoriesResult::getLabel).collect(Collectors.toList()).toArray(array);
+                categoriesResults.stream().map(CategoriesResult::getLabel).collect(Collectors.toList()).toArray(array);
 
-            categories.setTypes(array);
+                categories.setTypes(array);
 
-            if(categoryDAO.findById(article.getPMID()) == null) {
-                categoryDAO.save(categories);
+                if(categoryDAO.findById(article.getPMID()) == null) {
+                    categoryDAO.save(categories);
+                }
+
+                String preview;
+
+                try{
+                    preview = text.substring(0, 300).concat("...");
+                } catch (StringIndexOutOfBoundsException e) {
+                    preview = "";
+                }
+
+
+
+                elasticSearchService.writeToElastic(new com.liyametrics.domain.elasticsearch.Article(
+                        article.getPMID(),
+                        article.getDoi(),
+                        article.getTitle(),
+                        preview,
+                        text,
+                        article.getUrl(),
+                        article.getRank(),
+                        DateTimeUtil.getString(article.getDate()),
+                        array,
+                        article.getAuthors(),
+                        article.getCitation())
+                );
+
+                articleDAO.save(article);
+
+                InfoMessageDecorator.print("Сохранили стаью в elastic и базу данных. \n"+article.toString());
+            }else {
+                InfoMessageDecorator.print("ВНИМАНИЕ ПУСТОЙ ТЕКСТ");
             }
-
-            String preview;
-
-            try{
-                preview = text.substring(0, 300).concat("...");
-            } catch (StringIndexOutOfBoundsException e) {
-                preview = "";
-            }
-
-
-
-            elasticSearchService.writeToElastic(new com.liyametrics.domain.elasticsearch.Article(
-                    article.getPMID(),
-                    article.getDoi(),
-                    article.getTitle(),
-                    preview,
-                    text,
-                    article.getUrl(),
-                    article.getRank(),
-                    DateTimeUtil.getString(article.getDate()),
-                    array,
-                    article.getAuthors(),
-                    article.getCitation())
-            );
-
-            articleDAO.save(article);
-
-            InfoMessageDecorator.print("Сохранили стаью в elastic и базу данных. \n"+article.toString());
 
 
         });
