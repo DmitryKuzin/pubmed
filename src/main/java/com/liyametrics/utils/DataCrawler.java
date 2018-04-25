@@ -19,7 +19,7 @@ public class DataCrawler {
        this.fetchService = fetchService;
     }
 
-//    @Scheduled(initialDelay = MINUTE, fixedDelay = 24 * HOUR)
+    @Scheduled(initialDelay = MINUTE, fixedDelay = 24 * HOUR)
     public void updateRecords() {
         System.out.println("updateRecords started crawling");
         fetchService.fetch(Period.YESTERDAY);

@@ -8,11 +8,17 @@ import com.liyametrics.domain.elasticsearch.searchresult.Hits;
 import com.liyametrics.domain.elasticsearch.searchresult.Result;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -32,7 +38,7 @@ public class ElasticSearchService {
     private final String FILTER_AUT_ENDPOINT = "/shortarticles/shortarticle/_search?q=authors";
     private final String INPUT_ENDPOINT = "/articles/article/";
     private final String FILTER_INDEX_INPUT_ENDPOINT = "/shortarticles/shortarticle/";
-    private final String ELASTIC_HOST = "https://bfa0b04f654c40ec5ffc0bb4d3154bb7.us-east-1.aws.found.io";
+    private final String ELASTIC_HOST = "bfa0b04f654c40ec5ffc0bb4d3154bb7.us-east-1.aws.found.io";
 
     private ObjectMapper mapper;
 
@@ -41,8 +47,19 @@ public class ElasticSearchService {
     public ElasticSearchService(){
 
         mapper = new ObjectMapper();
-        restClient = RestClient.builder(
-                new HttpHost(ELASTIC_HOST, 9243, "http")).build();
+
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY,
+                new UsernamePasswordCredentials("elastic", "ou7lPqPpYpQ6xx0cLNJpIi55"));
+
+
+        restClient = RestClient.builder(new HttpHost(ELASTIC_HOST, 9243, "https"))
+                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                    @Override
+                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                        return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                    }
+                }).build();
 
 
     }
