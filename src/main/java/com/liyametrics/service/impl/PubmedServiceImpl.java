@@ -1,10 +1,11 @@
 package com.liyametrics.service.impl;
 
+import com.liyametrics.TO.altmetric.Altmetrica;
 import com.liyametrics.TO.fetch.*;
 import com.liyametrics.TO.doi.*;
 import com.liyametrics.TO.fetch.RecordType;
-import com.liyametrics.dao.RecordDAO;
-import com.liyametrics.domain.Record;
+import com.liyametrics.dao.ArticleDAO;
+import com.liyametrics.domain.Article;
 import com.liyametrics.service.AltmetricService;
 import com.liyametrics.service.PubmedService;
 import com.liyametrics.utils.DateTimeUtil;
@@ -16,9 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -27,12 +26,12 @@ public class PubmedServiceImpl implements PubmedService {
     private final String PUBMED_URL = "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?from=";
     private final String PUBMED_TO_DOI_URL = "https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/?tool=my_tool&email=my_email@example.com&versions=no&ids=";
     private final RestTemplate restTemplate;
-    private final RecordDAO recordDAO;
+    private final ArticleDAO recordDAO;
     private final AltmetricService altmetricService;
 
 
     @Autowired
-    public PubmedServiceImpl(RestTemplate restTemplate, RecordDAO recordDAO, AltmetricService altmetricService) {
+    public PubmedServiceImpl(RestTemplate restTemplate, ArticleDAO recordDAO, AltmetricService altmetricService) {
         this.restTemplate = restTemplate;
         this.recordDAO = recordDAO;
         this.altmetricService = altmetricService;
@@ -40,22 +39,26 @@ public class PubmedServiceImpl implements PubmedService {
 
 
     @Override
-    public void fetchRecords(List<String> range) {
+    public List<Article> fetchRecords(List<String> range) {
+        List<Article> articles = new ArrayList<>();
+
         range.forEach(r -> {
             String queryString = PUBMED_URL + r;
-            processFetchingData(queryString, DateTimeUtil.fromString(r));
+            articles.addAll(processFetchingData(queryString, DateTimeUtil.fromString(r)));
         });
+
+        return articles;
     }
 
     @Override
-    public List<String> fetchRecords(Period period) {
+    public List<Article> fetchRecords(Period period) {
 
         String queryString = PUBMED_URL + DateTimeUtil.getDate(period);
         return processFetchingData(queryString, DateTimeUtil.getDateDate(period));
     }
 
-    private List<String> processFetchingData(String url, Date forDay) {
-        List<String> pmids = new ArrayList<>();
+    private List<Article> processFetchingData(String url, Date forDay) {
+        List<Article> pmids = new ArrayList<>();
 
         try {
             ResponseEntity<OA> responseEntity =
@@ -65,23 +68,31 @@ public class PubmedServiceImpl implements PubmedService {
                 Stream<RecordType> stream = responseEntity.getBody().getRecords().getRecord().stream();
 
                 stream.forEach(r -> {
+
                     String doi = convertToDoi(r.getId());
 
                     if(recordDAO.findById(r.getId()) == null) {
-                        recordDAO.save(new Record(
-                                r.getId(),
-                                r.getLink().getHref(),
-                                doi,
-                                r.getCitation(),
-                                altmetricService.getRate(doi),
-                                forDay
-                        ));
-                        pmids.add(r.getId());
-                    } else {
-                        System.out.println("Id :" + r.getId() + " already exists in DB.");
-                    }
 
+                        Altmetrica rate = altmetricService.getRate(doi);
+
+                        if(rate!=null) {
+                            Article article = new Article(
+                                    r.getId(),
+                                    r.getLink().getHref(),
+                                    doi,
+                                    r.getCitation(),
+                                    rate.getContext().getAll().getRank(),
+                                    forDay,
+                                    rate.getAuthors(),
+                                    rate.getTitle()
+                            );
+                            pmids.add(article);
+                        }
+                    }
                 });
+            }
+            else {
+                System.out.println("Oops something went wrong here : PubmedServiceImpl:100");
             }
 
         } catch (Throwable t) {

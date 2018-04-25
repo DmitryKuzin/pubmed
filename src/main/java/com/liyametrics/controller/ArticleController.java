@@ -1,6 +1,6 @@
 package com.liyametrics.controller;
 
-import com.liyametrics.domain.Record;
+import com.liyametrics.domain.Article;
 import com.liyametrics.service.RecordService;
 import com.liyametrics.utils.Period;
 import io.swagger.annotations.Api;
@@ -21,9 +21,9 @@ public class ArticleController {
     }
 
 
-    @ApiOperation(value = "Получить статью по id", response = Record.class)
-    @GetMapping("getArticles")
-    public Record getArticles(String id) {
+    @ApiOperation(value = "Получить статью по id", response = Article.class)
+    @GetMapping("articles")
+    public Article getArticles(String id) {
 
         return recordService.getRecord(id);
 
@@ -31,7 +31,7 @@ public class ArticleController {
 
     @ApiOperation(value = "Получить отсортированный по убыванию популярности список статей")
     @GetMapping("top")
-    public List<Record> topRecords(Period period, Integer limit) {
+    public List<Article> topRecords(Period period, Integer limit) {
         return recordService.getTopRecordsByPeriod(period, limit);
     }
 

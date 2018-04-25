@@ -18,6 +18,11 @@ public class DateTimeUtil {
         return df.format(getDateDate(period));
     }
 
+    public static String getString(Date date) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(date);
+    }
+
     public static Date getDateDate(Period period) {
 
         Calendar cal = Calendar.getInstance();

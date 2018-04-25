@@ -5,10 +5,9 @@ import com.liyametrics.utils.Period;
 
 import java.util.List;
 
-public interface RecordService {
+public interface FetchService {
 
-    Article getRecord(String id);
+    void fetch(List<String> range);
 
-    List<Article> getTopRecordsByPeriod(Period period, Integer limit);
-
+    void fetch(Period period);
 }

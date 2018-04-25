@@ -1,8 +1,10 @@
 package com.liyametrics.service;
 
+import com.liyametrics.TO.altmetric.Altmetrica;
+
 import java.util.Map;
 
 public interface AltmetricService {
 
-    Long getRate(String doi);
+    Altmetrica getRate(String doi);
 }

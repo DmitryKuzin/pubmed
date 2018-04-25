@@ -1,5 +1,6 @@
 package com.liyametrics.controller;
 
+import com.liyametrics.service.FetchService;
 import com.liyametrics.service.PubmedService;
 import com.liyametrics.utils.DateTimeUtil;
 import com.liyametrics.utils.Period;
@@ -20,30 +21,31 @@ import java.util.List;
 @Api(tags = "Fetch API", description = "Операции с подгрузкой статей")
 public class FetchController {
 
-    private PubmedService pubmedService;
+    private FetchService fetchService;
 
     @Autowired
-    public FetchController(PubmedService pubmedService) {
-        this.pubmedService = pubmedService;
+    public FetchController(FetchService fetchService) {
+        this.fetchService = fetchService;
     }
 
     @ApiOperation(value = "Подгрузить статьи в пределах заданного диапазона дат")
-    @GetMapping("/fetchData")
+    @GetMapping("/fetchDataByRange")
     public String fetchData(String from, String to) throws JAXBException {
 
         List<String> range = DateTimeUtil.getRange(from, to);
 
-        pubmedService.fetchRecords(range);
+        fetchService.fetch(range);
 
         return "Data fetched";
     }
 
     @ApiOperation(value = "Подгрузить вчерашние статьи")
-    @GetMapping("/fetchFreshData")
-    public List<String> fetchFreshData() {
+    @GetMapping("/fetchYesterdayData")
+    public String fetchYesterdayData() {
 
         System.out.println("updateRecords started crawling");
-        return pubmedService.fetchRecords(Period.YESTERDAY);
+        fetchService.fetch(Period.YESTERDAY);
 
+        return "Data fetched";
     }
 }

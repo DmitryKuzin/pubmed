@@ -4,17 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import java.util.Arrays;
 import java.util.Date;
 
 @Entity
-@NamedNativeQueries({
-        @NamedNativeQuery(
-                name    =   "getRecordsOrderedByDate",
-                query   =   "SELECT *  FROM record WHERE date BETWEEN ? AND ? ORDER BY rank DESC LIMIT ?;",
-                resultClass=Record.class
-        )
-})
-public class Record {
+public class Article {
 
     @Id
     private String PMID;
@@ -29,15 +23,21 @@ public class Record {
 
     private Date date;
 
-    public Record(){}
+    private String[] authors;
 
-    public Record(String PMID, String url, String doi, String citation, Long rank, Date date) {
+    private String title;
+
+    public Article(){}
+
+    public Article(String PMID, String url, String doi, String citation, Long rank, Date date, String[] authors, String title) {
         this.PMID = PMID;
         this.url = url;
         this.doi = doi;
         this.citation = citation;
         this.rank = rank;
         this.date = date;
+        this.authors = authors;
+        this.title = title;
     }
 
     public Date getDate() {
@@ -86,5 +86,35 @@ public class Record {
 
     public void setCitation(String citation) {
         this.citation = citation;
+    }
+
+    public String[] getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(String[] authors) {
+        this.authors = authors;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "PMID='" + PMID + '\'' +
+                ", url='" + url + '\'' +
+                ", doi='" + doi + '\'' +
+                ", citation='" + citation + '\'' +
+                ", rank=" + rank +
+                ", date=" + date +
+                ", authors=" + Arrays.toString(authors) +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

@@ -12,6 +12,8 @@ public class Altmetrica implements Serializable {
 
     private Context context;
 
+    private String[] authors;
+
     public String getTitle() {
         return title;
     }
@@ -42,5 +44,13 @@ public class Altmetrica implements Serializable {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public String[] getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(String[] authors) {
+        this.authors = authors;
     }
 }

@@ -1,7 +1,7 @@
 package com.liyametrics.dao.impl;
 
-import com.liyametrics.dao.RecordDAO;
-import com.liyametrics.domain.Record;
+import com.liyametrics.dao.ArticleDAO;
+import com.liyametrics.domain.Article;
 import com.liyametrics.utils.DateTimeUtil;
 import com.liyametrics.utils.Period;
 import org.hibernate.Query;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class RecordDAOImpl implements RecordDAO {
+public class ArticleDAOImpl implements ArticleDAO {
 
 
     @Autowired
@@ -28,21 +28,21 @@ public class RecordDAOImpl implements RecordDAO {
     }
 
     @Override
-    public Serializable save(Record record) {
+    public Serializable save(Article record) {
         return getSession().save(record);
     }
 
     @Override
-    public Record findById(final Serializable id) {
-        return getSession().get(Record.class, id);
+    public Article findById(final Serializable id) {
+        return getSession().get(Article.class, id);
     }
 
     @Override
-    public List<Record> getTopRecordsByPeriod(Period period, Integer limit) {
+    public List<Article> getTopRecordsByPeriod(Period period, Integer limit) {
 
         Session session = getSession().getSessionFactory().openSession();
 
-        Query query = session.createQuery("FROM Record r WHERE r.date BETWEEN ? AND ? ORDER BY r.rank DESC");
+        Query query = session.createQuery("FROM Article r WHERE r.date BETWEEN ? AND ? ORDER BY r.rank DESC");
 
         query.setMaxResults(limit);
         query.setParameter(0, DateTimeUtil.getDateDate(period));
@@ -51,7 +51,7 @@ public class RecordDAOImpl implements RecordDAO {
         System.out.println(DateTimeUtil.getDate(Period.TODAY));
         System.out.println(DateTimeUtil.getDate(period));
 
-        List<Record> records = (List<Record>)query.list();
+        List<Article> records = (List<Article>)query.list();
 
         session.close();
 
