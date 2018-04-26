@@ -117,10 +117,12 @@ public class ElasticSearchService {
 
     }
 
-    public List<ShortArticle> search(String searchQuery) {
+    public List<ShortArticle> search(String searchQuery, Integer pageNum, Integer limit) {
 
         String jsonQuery = "{" +
                 "\"_source\": [\"PMID\",\"title\",\"shortText\",\"categories\",\"rank\",\"authors\"]," +
+                " \"from\":"+ limit * (pageNum-1) +" ,\n" +
+                " \"size\": " + limit + "," +
                 "  \"query\": {" +
                 "    \"simple_query_string\": {" +
                 "      \"query\": \""+ searchQuery+ "\"," +

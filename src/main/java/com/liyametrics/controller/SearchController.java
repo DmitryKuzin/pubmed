@@ -21,9 +21,9 @@ public class SearchController {
 
     @ApiOperation(value = "search")
     @GetMapping("/search")
-    public List<ShortArticle> search(String searchQuery) {
+    public List<ShortArticle> search(String searchQuery, Integer limit, Integer pageNum) {
 
-        return elasticSearchService.search(searchQuery);
+        return elasticSearchService.search(searchQuery, pageNum, limit);
 
     }
 
