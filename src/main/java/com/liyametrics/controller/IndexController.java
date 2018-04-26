@@ -30,9 +30,9 @@ public class IndexController {
     }
 
     @RequestMapping(value = "search", method = RequestMethod.POST)
-    public String search(String query, Model model) {
+    public String search(String query, Integer limit, Integer pageNum, Model model) {
 
-        List<ShortArticle> shortArticles = elasticSearchService.search(query);
+        List<ShortArticle> shortArticles = elasticSearchService.search(query, pageNum, limit);
 
         if(shortArticles.size()>11) {
             shortArticles = shortArticles.subList(0,10);
