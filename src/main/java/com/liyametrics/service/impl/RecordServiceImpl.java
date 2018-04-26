@@ -25,9 +25,9 @@ public class RecordServiceImpl implements RecordService{
     }
 
     @Override
-    public List<Article> getTopRecordsByPeriod(Period period, Integer limit) {
+    public List<Article> getTopRecordsByPeriod(Period period, Integer limit, Integer pageNum) {
 
-        List<Article> topRecordsByPeriod = recordDAO.getTopRecordsByPeriod(period, limit);
+        List<Article> topRecordsByPeriod = recordDAO.getTopRecordsByPeriod(period, limit, pageNum);
 
         if(topRecordsByPeriod == null || topRecordsByPeriod.size() == 0) {
             //fetch data for this period

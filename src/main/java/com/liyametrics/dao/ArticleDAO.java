@@ -12,5 +12,5 @@ public interface ArticleDAO {
 
     Article findById(final Serializable id);
 
-    List<Article> getTopRecordsByPeriod(Period period, Integer limit);
+    List<Article> getTopRecordsByPeriod(Period period, Integer limit, Integer pageNum);
 }

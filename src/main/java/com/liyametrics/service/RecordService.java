@@ -9,6 +9,6 @@ public interface RecordService {
 
     Article getRecord(String id);
 
-    List<Article> getTopRecordsByPeriod(Period period, Integer limit);
+    List<Article> getTopRecordsByPeriod(Period period, Integer limit, Integer pageNum);
 
 }

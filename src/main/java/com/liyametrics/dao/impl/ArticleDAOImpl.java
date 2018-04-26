@@ -38,15 +38,16 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
     @Override
-    public List<Article> getTopRecordsByPeriod(Period period, Integer limit) {
+    public List<Article> getTopRecordsByPeriod(Period period, Integer limit, Integer pageNum) {
 
         Session session = getSession().getSessionFactory().openSession();
 
-        Query query = session.createQuery("FROM Article r WHERE r.date BETWEEN ? AND ? ORDER BY r.rank DESC");
+        Query query = session.createQuery("FROM Article r WHERE r.date BETWEEN ? AND ? ORDER BY r.rank DESC LIMIT ? OFFSET ?");
 
-        query.setMaxResults(limit);
         query.setParameter(0, DateTimeUtil.getDateDate(period));
         query.setParameter(1, DateTimeUtil.getDateDate(Period.TODAY));
+        query.setParameter(2, limit);
+        query.setParameter(3, limit * pageNum );
 
         System.out.println(DateTimeUtil.getDate(Period.TODAY));
         System.out.println(DateTimeUtil.getDate(period));

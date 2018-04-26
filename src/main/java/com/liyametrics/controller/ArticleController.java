@@ -31,8 +31,8 @@ public class ArticleController {
 
     @ApiOperation(value = "Получить отсортированный по убыванию популярности список статей")
     @GetMapping("top")
-    public List<Article> topRecords(Period period, Integer limit) {
-        return recordService.getTopRecordsByPeriod(period, limit);
+    public List<Article> topRecords(Period period, Integer limit, Integer pageNum) {
+        return recordService.getTopRecordsByPeriod(period, limit, pageNum);
     }
 
 
