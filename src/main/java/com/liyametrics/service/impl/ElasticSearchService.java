@@ -106,10 +106,12 @@ public class ElasticSearchService {
 
     }
 
-    public List<ShortArticle> filterByCategory(String category) {
+    public List<ShortArticle> filterByCategory(String category, Integer pageNum, Integer limit) {
 
         String jsonQuery = "{" +
                 "\"_source\": [\"PMID\",\"title\",\"shortText\",\"categories\",\"rank\",\"authors\"]," +
+                " \"from\":"+ limit * (pageNum-1) +" ,\n" +
+                " \"size\": " + limit + "," +
                 "\"sort\": [{\"rank\": \"desc\"}]" +
                 "}";
 
@@ -139,9 +141,11 @@ public class ElasticSearchService {
         return executeQuery("POST", SEARCH_ENDPOINT, jsonQuery);
     }
 
-    public List<ShortArticle> filterByAuthor(String author) {
+    public List<ShortArticle> filterByAuthor(String author, Integer pageNum, Integer limit) {
         String jsonQuery = "{" +
                 "\"_source\": [\"PMID\",\"title\",\"shortText\",\"categories\",\"rank\",\"authors\"]," +
+                " \"from\":"+ limit * (pageNum-1) +" ,\n" +
+                " \"size\": " + limit + "," +
                 "\"sort\": [{\"rank\": \"desc\"}]" +
                 "}";
 

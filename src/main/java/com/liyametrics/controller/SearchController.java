@@ -29,17 +29,17 @@ public class SearchController {
 
     @ApiOperation(value = "filter Articles by category")
     @GetMapping("/categoryFilter")
-    public List<ShortArticle> filterCategory(String category) {
+    public List<ShortArticle> filterCategory(String category, Integer limit, Integer pageNum) {
 
-        return elasticSearchService.filterByCategory(category);
+        return elasticSearchService.filterByCategory(category, pageNum, limit);
 
     }
 
     @ApiOperation(value = "filter Articles by author")
     @GetMapping("/authorFilter")
-    public List<ShortArticle> filterAuthor(String author) {
+    public List<ShortArticle> filterAuthor(String author, Integer limit, Integer pageNum) {
 
-        return elasticSearchService.filterByAuthor(author);
+        return elasticSearchService.filterByAuthor(author, pageNum, limit);
 
     }
 

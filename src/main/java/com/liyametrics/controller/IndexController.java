@@ -46,8 +46,8 @@ public class IndexController {
 
 
     @RequestMapping(value = "filter", method = RequestMethod.GET)
-    public String filter(String category, Model model) {
-        List<ShortArticle> shortArticles = elasticSearchService.filterByCategory(category);
+    public String filter(String category, Integer limit, Integer pageNum, Model model) {
+        List<ShortArticle> shortArticles = elasticSearchService.filterByCategory(category, pageNum, limit);
         if(shortArticles.size()>10) {
             shortArticles = shortArticles.subList(0,10);
         }
@@ -57,8 +57,8 @@ public class IndexController {
     }
 
     @RequestMapping(value = "filterAuthor", method = RequestMethod.GET)
-    public String filterAuthor(String author, Model model) {
-        List<ShortArticle> shortArticles = elasticSearchService.filterByAuthor(author);
+    public String filterAuthor(String author, Integer limit, Integer pageNum, Model model) {
+        List<ShortArticle> shortArticles = elasticSearchService.filterByAuthor(author, pageNum, limit);
         if(shortArticles.size()>10) {
             shortArticles = shortArticles.subList(0,10);
         }
