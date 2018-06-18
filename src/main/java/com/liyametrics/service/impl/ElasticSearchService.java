@@ -38,7 +38,7 @@ public class ElasticSearchService {
     private final String FILTER_AUT_ENDPOINT = "/shortarticles/shortarticle/_search?q=authors";
     private final String INPUT_ENDPOINT = "/articles/article/";
     private final String FILTER_INDEX_INPUT_ENDPOINT = "/shortarticles/shortarticle/";
-    private final String ELASTIC_HOST = "bfa0b04f654c40ec5ffc0bb4d3154bb7.us-east-1.aws.found.io";
+    private final String ELASTIC_HOST = "https://0c74ed132ca04092813b1623b8b1058c.us-east-1.aws.found.io";
 
     private ObjectMapper mapper;
 
@@ -50,7 +50,7 @@ public class ElasticSearchService {
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials("elastic", "ou7lPqPpYpQ6xx0cLNJpIi55"));
+                new UsernamePasswordCredentials("elastic", "rRlAjolYgpRwFhNT4h0yrckG"));
 
 
         restClient = RestClient.builder(new HttpHost(ELASTIC_HOST, 9243, "https"))
